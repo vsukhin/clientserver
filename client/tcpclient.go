@@ -25,6 +25,7 @@ func (tcpclient *TcpClient) Start() {
 	if err != nil {
 		Log.Fatalf("Can't connect to port %v having error %v", tcpclient.tcpPort, err)
 	}
+	defer conn.Close()
 
 	for {
 		_, err = conn.Write([]byte(tcpclient.textData))

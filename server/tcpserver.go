@@ -46,7 +46,11 @@ func (tcpserver *TcpServer) Read(conn net.Conn) {
 		buf := make([]byte, BUFFER_SIZE)
 		count, err := conn.Read(buf)
 		if err == io.EOF {
-			continue
+			err = conn.Close()
+			if err != nil {
+				Log.Fatalf("Can't close connection %v", err)
+			}
+			return
 		}
 		if err != nil {
 			Log.Fatalf("Error during reading from port %v having error %v", tcpserver.tcpPort, err)
