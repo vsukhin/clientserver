@@ -42,10 +42,16 @@ func (tcpserver *TcpServer) Start() {
 }
 
 func (tcpserver *TcpServer) Read(conn net.Conn) {
+	text := *new([]byte)
 	for {
 		buf := make([]byte, BUFFER_SIZE)
 		count, err := conn.Read(buf)
+		if count != 0 {
+			text = append(text, buf[0:count]...)
+			Log.Println("Read raw text ", string(buf[0:count]))
+		}
 		if err == io.EOF {
+			tcpserver.textChannel <- string(text)
 			err = conn.Close()
 			if err != nil {
 				Log.Fatalf("Can't close connection %v", err)
@@ -55,9 +61,6 @@ func (tcpserver *TcpServer) Read(conn net.Conn) {
 		if err != nil {
 			Log.Fatalf("Error during reading from port %v having error %v", tcpserver.tcpPort, err)
 		}
-		if count != 0 {
-			tcpserver.textChannel <- string(buf)
-			Log.Println("Read raw text ", string(buf))
-		}
+
 	}
 }

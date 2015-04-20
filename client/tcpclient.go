@@ -27,12 +27,10 @@ func (tcpclient *TcpClient) Start() {
 	}
 	defer conn.Close()
 
-	for {
-		_, err = conn.Write([]byte(tcpclient.textData))
-		if err == nil {
-			Log.Println("Succesfully sending text data ", tcpclient.textData)
-		} else {
-			Log.Fatalf("Can't send text data %v having error %v", tcpclient.textData, err)
-		}
+	_, err = conn.Write([]byte(tcpclient.textData))
+	if err == nil {
+		Log.Println("Succesfully sending text data ", tcpclient.textData)
+	} else {
+		Log.Fatalf("Can't send text data %v having error %v", tcpclient.textData, err)
 	}
 }

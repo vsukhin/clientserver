@@ -67,9 +67,11 @@ func (storage *Storage) ProcessText(textChannel chan string) {
 			storage.RawText = append(storage.RawText, rawText)
 		}
 		for _, word := range words {
-			storage.WordIndex[word]++
-			for _, char := range word {
-				storage.CharIndex[char]++
+			if len(word) != 0 {
+				storage.WordIndex[word]++
+				for _, char := range word {
+					storage.CharIndex[char]++
+				}
 			}
 		}
 		storage.Unlock()
